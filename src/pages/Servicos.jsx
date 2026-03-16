@@ -13,7 +13,11 @@ const catShort = {
 
 export default function Servicos() {
   const [filtro, setFiltro] = useState('todos')
-  const lista = filtro === 'todos' ? prestadores : prestadores.filter(p => p.especialidade === filtro)
+  const [busca, setBusca] = useState('')
+  const lista = prestadores.filter(p =>
+    (filtro === 'todos' || p.especialidade === filtro) &&
+    (busca === '' || p.nome.toLowerCase().includes(busca.toLowerCase()) || p.especialidade.toLowerCase().includes(busca.toLowerCase()))
+  )
 
   return (
     <div className="page page-enter">
@@ -22,26 +26,31 @@ export default function Servicos() {
         <p className="sub">Profissionais da Vila Olímpia</p>
       </div>
 
-      {/* Search bar */}
-      <div className="search-bar">
-        🔍 O que você precisa hoje?
+      <div className="search-wrap">
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="🔍  O que você precisa hoje?"
+          value={busca}
+          onChange={e => setBusca(e.target.value)}
+        />
       </div>
 
       <div className="chips">
         {cats.map(c => (
-          <button key={c} className={`chip ${filtro === c ? 'on' : ''}`} onClick={() => setFiltro(c)}>
+          <button key={c} className={`chip${filtro === c ? ' on' : ''}`} onClick={() => setFiltro(c)}>
             {catShort[c]}
           </button>
         ))}
       </div>
 
-      <p className="servicos-section-title">Profissionais Próximos</p>
+      <p className="serv-section-title">Profissionais Próximos</p>
 
-      <div className="servicos-list stagger">
+      <div className="serv-list stagger">
         {lista.map(p => (
           <div key={p.id} className="card serv-card">
-            <div className="serv-placeholder">
-              <span>{p.emoji}</span>
+            <div className="serv-img">
+              <span className="serv-big-emoji">{p.emoji}</span>
               <span className="serv-rating">⭐ {p.avaliacao.toFixed(1)}</span>
             </div>
             <div className="serv-body">
@@ -53,8 +62,7 @@ export default function Servicos() {
               <p className="serv-desc">{p.descricao}</p>
               <a
                 href={`https://wa.me/${p.whatsapp}?text=Olá ${p.nome}! Vi seu perfil no Hub Vila Olímpia e gostaria de um orçamento.`}
-                target="_blank"
-                rel="noreferrer"
+                target="_blank" rel="noreferrer"
                 className="btn-wpp"
               >
                 💬 Chamar no WhatsApp
@@ -64,16 +72,10 @@ export default function Servicos() {
         ))}
       </div>
 
-      {/* CTA cadastro */}
       <div className="cta-cadastro">
         <p className="cta-title">Você é autônomo?</p>
         <p className="cta-sub">Apareça aqui para toda a Vila Olímpia. Cadastro gratuito no MVP.</p>
-        <a
-          href="https://wa.me/5512999999999?text=Olá! Quero me cadastrar como prestador no Hub Vila Olímpia."
-          target="_blank"
-          rel="noreferrer"
-          className="btn-wpp"
-        >
+        <a href="https://wa.me/5512999999999?text=Olá! Quero me cadastrar como prestador no Hub Vila Olímpia." target="_blank" rel="noreferrer" className="btn-wpp">
           💬 Quero me cadastrar
         </a>
       </div>

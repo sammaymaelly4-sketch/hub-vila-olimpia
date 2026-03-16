@@ -19,7 +19,7 @@ export default function BottomNav() {
           className={({ isActive }) => 'nav-btn' + (isActive ? ' on' : '')}
         >
           <span className="nav-icon">{t.icon}</span>
-          <span>{t.label}</span>
+          <span className="nav-label">{t.label}</span>
         </NavLink>
       ))}
     </nav>

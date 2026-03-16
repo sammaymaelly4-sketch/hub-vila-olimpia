@@ -4,22 +4,21 @@ import './Comercios.css'
 
 const catLabel = { bar: 'Bar', mercadinho: 'Mercadinho', farmacia: 'Farmácia' }
 
-// ── CATÁLOGO ────────────────────────────────────────────────
+// ── CATÁLOGO ─────────────────────────────────────────────
 function Catalogo({ comercio, onBack }) {
   const itens = catalogo[comercio.id] || []
   const [carrinho, setCarrinho] = useState([])
 
   const add = (item) => setCarrinho(prev => {
     const ex = prev.find(x => x.id === item.id)
-    return ex
-      ? prev.map(x => x.id === item.id ? { ...x, qtd: x.qtd + 1 } : x)
-      : [...prev, { ...item, qtd: 1 }]
+    return ex ? prev.map(x => x.id === item.id ? { ...x, qtd: x.qtd + 1 } : x)
+              : [...prev, { ...item, qtd: 1 }]
   })
-
   const rm = (id) => setCarrinho(prev => {
     const ex = prev.find(x => x.id === id)
     if (!ex) return prev
-    return ex.qtd <= 1 ? prev.filter(x => x.id !== id) : prev.map(x => x.id === id ? { ...x, qtd: x.qtd - 1 } : x)
+    return ex.qtd <= 1 ? prev.filter(x => x.id !== id)
+                       : prev.map(x => x.id === id ? { ...x, qtd: x.qtd - 1 } : x)
   })
 
   const qtdOf = (id) => carrinho.find(x => x.id === id)?.qtd || 0
@@ -27,38 +26,32 @@ function Catalogo({ comercio, onBack }) {
   const totalItens = carrinho.reduce((s, x) => s + x.qtd, 0)
 
   const pedirWpp = () => {
-    const linhas = carrinho.map(x => `• ${x.qtd}x ${x.nome} — R$${(x.preco * x.qtd).toFixed(2)}`).join('\n')
+    const linhas = carrinho.map(x => `• ${x.qtd}x ${x.nome} — R$${(x.preco*x.qtd).toFixed(2)}`).join('\n')
     const msg = encodeURIComponent(`Olá! Gostaria de fazer um pedido:\n\n${linhas}\n\n*Total: R$${total.toFixed(2)}*\n\nvia Hub Vila Olímpia 🏘️`)
     window.open(`https://wa.me/${comercio.whatsapp}?text=${msg}`, '_blank')
   }
 
   return (
     <div className="page page-enter">
-      {/* Header */}
-      <div className="pg-header" style={{ background: comercio.cor }}>
+      <div className="pg-header" style={{ background: comercio.cor, borderColor: 'transparent' }}>
         <button className="back" style={{ color: 'rgba(255,255,255,0.85)' }} onClick={onBack}>← Voltar</button>
         <h1 style={{ color: '#fff' }}>Cardápio</h1>
-        <p className="sub" style={{ color: 'rgba(255,255,255,0.75)' }}>{comercio.nome}</p>
+        <p className="sub" style={{ color: 'rgba(255,255,255,0.7)' }}>{comercio.nome}</p>
       </div>
 
-      {/* Hero */}
-      <div className="cat-hero" style={{ background: comercio.cor }}>
+      <div className="cat-hero" style={{ background: `linear-gradient(160deg, ${comercio.cor}, ${comercio.cor}CC)` }}>
         <div className="cat-emoji">{comercio.emoji}</div>
-        <p className="cat-sub">{comercio.descricao}</p>
-        {comercio.destaque && (
-          <div className="cat-destaque">🎉 {comercio.destaque}</div>
-        )}
+        <p className="cat-desc">{comercio.descricao}</p>
+        {comercio.destaque && <div className="cat-destaque">🎉 {comercio.destaque}</div>}
       </div>
 
-      {/* Título */}
       <p className="cat-section-title">Os Mais Pedidos</p>
 
-      {/* Produtos */}
       <div className="prod-list stagger">
         {itens.map(item => {
           const q = qtdOf(item.id)
           return (
-            <div key={item.id} className={`card prod-card ${item.destaque ? 'prod-destaque' : ''}`}>
+            <div key={item.id} className={`card prod-card${item.destaque ? ' prod-destaque' : ''}`}>
               <span className="prod-emoji">{item.emoji}</span>
               <div className="prod-info">
                 {item.destaque && <span className="mais-pedido">MAIS PEDIDO</span>}
@@ -67,61 +60,58 @@ function Catalogo({ comercio, onBack }) {
                 <p className="prod-preco">R${item.preco.toFixed(2)}</p>
               </div>
               <div className="prod-ctrl">
-                {q > 0 ? (
+                {q > 0 && (
                   <>
-                    <button className="ctrl-btn minus" onClick={() => rm(item.id)} style={{ background: '#ddd', color: '#666' }}>−</button>
+                    <button className="ctrl-btn" onClick={() => rm(item.id)} style={{ background: 'var(--surface2)', color: 'var(--txt)' }}>−</button>
                     <span className="ctrl-qtd">{q}</span>
                   </>
-                ) : null}
-                <button className="ctrl-btn plus" onClick={() => add(item)} style={{ background: comercio.cor }}>+</button>
+                )}
+                <button className="ctrl-btn" onClick={() => add(item)} style={{ background: comercio.cor, color: '#fff' }}>+</button>
               </div>
             </div>
           )
         })}
       </div>
 
-      {/* Cart bar */}
       {carrinho.length > 0 && (
         <div className="cart-bar">
           <div>
-            <span className="cart-info">{totalItens} iten(s) selecionados</span>
+            <span className="cart-info">{totalItens} item(s)</span>
             <span className="cart-total">R${total.toFixed(2)}</span>
           </div>
-          <button className="cart-btn" onClick={pedirWpp}>
-            Finalizar Pedido
-          </button>
+          <button className="cart-cta" onClick={pedirWpp}>Finalizar Pedido</button>
         </div>
       )}
     </div>
   )
 }
 
-// ── DETALHE ─────────────────────────────────────────────────
+// ── DETALHE ──────────────────────────────────────────────
 function Detalhe({ comercio, onBack }) {
   const [verCat, setVerCat] = useState(false)
   if (verCat) return <Catalogo comercio={comercio} onBack={() => setVerCat(false)} />
 
   return (
     <div className="page page-enter">
-      <div className="pg-header" style={{ background: comercio.cor }}>
+      <div className="pg-header" style={{ background: comercio.cor, borderColor: 'transparent' }}>
         <button className="back" style={{ color: 'rgba(255,255,255,0.85)' }} onClick={onBack}>← Voltar</button>
         <h1 style={{ color: '#fff' }}>{comercio.nome}</h1>
       </div>
 
-      <div className="det-hero" style={{ background: comercio.cor }}>
-        <div className="det-placeholder" style={{ background: comercio.bg }}>{comercio.emoji}</div>
+      <div className="det-hero" style={{ background: `linear-gradient(160deg, ${comercio.cor}, ${comercio.cor}BB)` }}>
+        <div className="det-avatar" style={{ background: 'rgba(255,255,255,0.15)' }}>{comercio.emoji}</div>
         <p className="det-desc">{comercio.descricao}</p>
-        {comercio.destaque && <div className="det-destaque">🎉 {comercio.destaque}</div>}
+        {comercio.destaque && <div className="det-badge">🎉 {comercio.destaque}</div>}
       </div>
 
-      <div className="det-body">
+      <div style={{ padding: '14px 16px' }}>
         <div className="card det-info">
           {[
             ['📍', comercio.endereco],
             ['📞', comercio.telefone],
-            [`⭐`, `${comercio.avaliacao} (${comercio.total_av} avaliações)`],
+            ['⭐', `${comercio.avaliacao} (${comercio.total_av} avaliações)`],
             ['🕐', `Seg–Sex: ${comercio.horario.seg_sex}`],
-            ['',   `Sáb: ${comercio.horario.sab} · Dom: ${comercio.horario.dom}`],
+            ['', `Sáb: ${comercio.horario.sab}  ·  Dom: ${comercio.horario.dom}`],
           ].map(([ic, txt], i) => (
             <div key={i} className="info-row" style={i === 4 ? { border: 'none' } : {}}>
               <span className="info-ic">{ic}</span>
@@ -135,7 +125,7 @@ function Detalhe({ comercio, onBack }) {
             💬 WhatsApp
           </a>
           {comercio.parceiro_plus && (
-            <button className="btn-laranja" onClick={() => setVerCat(true)}>
+            <button className="btn-orange" onClick={() => setVerCat(true)}>
               🛍️ Ver cardápio
             </button>
           )}
@@ -145,7 +135,7 @@ function Detalhe({ comercio, onBack }) {
   )
 }
 
-// ── LISTA ────────────────────────────────────────────────────
+// ── LISTA ─────────────────────────────────────────────────
 export default function Comercios() {
   const [selecionado, setSelecionado] = useState(null)
   const [filtro, setFiltro] = useState('todos')
@@ -164,7 +154,7 @@ export default function Comercios() {
 
       <div className="chips">
         {cats.map(c => (
-          <button key={c} className={`chip ${filtro === c ? 'on' : ''}`} onClick={() => setFiltro(c)}>
+          <button key={c} className={`chip${filtro === c ? ' on' : ''}`} onClick={() => setFiltro(c)}>
             {c === 'todos' ? 'Todos' : catLabel[c] || c}
           </button>
         ))}
@@ -173,12 +163,14 @@ export default function Comercios() {
       <div className="com-list stagger">
         {lista.map(c => (
           <button key={c.id} className="com-card card" onClick={() => setSelecionado(c)}>
-            <div className="com-placeholder" style={{ background: c.bg }}>
-              <span>{c.emoji}</span>
+            <div className="com-img" style={{ background: `linear-gradient(135deg, ${c.bg}, ${c.cor}22)` }}>
+              <span className="com-big-emoji">{c.emoji}</span>
               <div className="com-overlay">
-                {c.parceiro_plus && <span className="badge-plus">PARCEIRO PLUS</span>}
+                <div className="com-overlay-top">
+                  {c.parceiro_plus && <span className="badge-plus">PARCEIRO PLUS</span>}
+                </div>
                 <p className="com-nome">{c.nome}</p>
-                <p className="com-sub-img">{catLabel[c.categoria]} · {c.horario.seg_sex}</p>
+                <p className="com-sub">{catLabel[c.categoria]} · {c.horario.seg_sex}</p>
               </div>
             </div>
             <div className="com-body">
