@@ -1,51 +1,82 @@
+import { useState } from 'react'
 import { prestadores } from '../data/mock'
-import Header from '../components/Header'
+import './Servicos.css'
+
+const cats = ['todos', 'Eletricista Residencial', 'Encanador Hidráulico', 'Costureira', 'Pintura e Acabamento']
+const catShort = {
+  'todos': 'Todos',
+  'Eletricista Residencial': '⚡ Eletricista',
+  'Encanador Hidráulico': '💧 Encanador',
+  'Costureira': '🧵 Costura',
+  'Pintura e Acabamento': '🎨 Pintura',
+}
 
 export default function Servicos() {
-  return (
-    <div className="page">
-      <Header title="Serviços" subtitle="Autônomos e prestadores da Vila Olímpia" />
+  const [filtro, setFiltro] = useState('todos')
+  const lista = filtro === 'todos' ? prestadores : prestadores.filter(p => p.especialidade === filtro)
 
-      <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {prestadores.map((p, i) => (
-          <div key={p.id} className="card fade-up" style={{ padding: '16px' }}>
-            <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-              <div style={{
-                width: 52, height: 52, borderRadius: 14, flexShrink: 0,
-                background: 'var(--bg2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 26,
-              }}>{p.emoji}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <p style={{ fontWeight: 600, fontSize: 15 }}>{p.nome}</p>
-                    <span className="tag" style={{ background: 'var(--verde-light)', color: 'var(--verde)', marginTop: 4 }}>
-                      {p.especialidade}
-                    </span>
-                  </div>
-                  <span className="stars">{'★'.repeat(Math.floor(p.avaliacao))} <span style={{ fontSize: 12, color: 'var(--txt3)', fontFamily: 'DM Sans' }}>{p.avaliacao.toFixed(1)}</span></span>
-                </div>
-                <p style={{ fontSize: 13, color: 'var(--txt2)', marginTop: 8, lineHeight: 1.5 }}>{p.descricao}</p>
-                <a href={`https://wa.me/${p.whatsapp}`} target="_blank" rel="noreferrer"
-                  className="btn-wpp" style={{ marginTop: 12, alignSelf: 'flex-start' }}>
-                  Chamar no WhatsApp
-                </a>
+  return (
+    <div className="page page-enter">
+      <div className="pg-header">
+        <h1>🔧 Serviços</h1>
+        <p className="sub">Profissionais da Vila Olímpia</p>
+      </div>
+
+      {/* Search bar */}
+      <div className="search-bar">
+        🔍 O que você precisa hoje?
+      </div>
+
+      <div className="chips">
+        {cats.map(c => (
+          <button key={c} className={`chip ${filtro === c ? 'on' : ''}`} onClick={() => setFiltro(c)}>
+            {catShort[c]}
+          </button>
+        ))}
+      </div>
+
+      <p className="servicos-section-title">Profissionais Próximos</p>
+
+      <div className="servicos-list stagger">
+        {lista.map(p => (
+          <div key={p.id} className="card serv-card">
+            <div className="serv-placeholder">
+              <span>{p.emoji}</span>
+              <span className="serv-rating">⭐ {p.avaliacao.toFixed(1)}</span>
+            </div>
+            <div className="serv-body">
+              <div className="serv-name-row">
+                <span className="serv-name">{p.nome}</span>
+                <span className="serv-dist">{p.dist}</span>
               </div>
+              <p className="serv-esp">{p.especialidade}</p>
+              <p className="serv-desc">{p.descricao}</p>
+              <a
+                href={`https://wa.me/${p.whatsapp}?text=Olá ${p.nome}! Vi seu perfil no Hub Vila Olímpia e gostaria de um orçamento.`}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-wpp"
+              >
+                💬 Chamar no WhatsApp
+              </a>
             </div>
           </div>
         ))}
       </div>
 
-      {/* CTA Anuncie */}
-      <div style={{ margin: '8px 16px 0', padding: '18px 20px', borderRadius: 'var(--radius)', background: 'var(--amarelo-light)', border: '1px dashed var(--amarelo)' }}>
-        <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Você é autônomo?</p>
-        <p style={{ fontSize: 13, color: 'var(--txt2)', marginBottom: 12 }}>Apareça aqui para toda a Vila Olímpia. Cadastro gratuito no MVP.</p>
-        <a href="https://wa.me/5512999999999?text=Olá! Quero me cadastrar como prestador no Hub Vila Olímpia." target="_blank" rel="noreferrer"
-          className="btn-wpp">
-          Quero me cadastrar
+      {/* CTA cadastro */}
+      <div className="cta-cadastro">
+        <p className="cta-title">Você é autônomo?</p>
+        <p className="cta-sub">Apareça aqui para toda a Vila Olímpia. Cadastro gratuito no MVP.</p>
+        <a
+          href="https://wa.me/5512999999999?text=Olá! Quero me cadastrar como prestador no Hub Vila Olímpia."
+          target="_blank"
+          rel="noreferrer"
+          className="btn-wpp"
+        >
+          💬 Quero me cadastrar
         </a>
       </div>
-      <div style={{ height: 16 }} />
     </div>
   )
 }

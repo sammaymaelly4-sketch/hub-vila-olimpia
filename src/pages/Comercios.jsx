@@ -1,72 +1,94 @@
 import { useState } from 'react'
 import { comercios, catalogo } from '../data/mock'
-import Header from '../components/Header'
+import './Comercios.css'
 
-const categoriaLabel = {
-  mercadinho: 'Mercadinho',
-  farmacia: 'Farmácia',
-  bar: 'Bar',
-  adega: 'Adega',
-  oficina: 'Oficina',
-}
+const catLabel = { bar: 'Bar', mercadinho: 'Mercadinho', farmacia: 'Farmácia' }
 
-function CatalogoView({ comercio, onBack }) {
+// ── CATÁLOGO ────────────────────────────────────────────────
+function Catalogo({ comercio, onBack }) {
   const itens = catalogo[comercio.id] || []
-  const [pedido, setPedido] = useState([])
+  const [carrinho, setCarrinho] = useState([])
 
-  const adicionar = (item) => {
-    setPedido(p => {
-      const exists = p.find(x => x.id === item.id)
-      if (exists) return p.map(x => x.id === item.id ? { ...x, qtd: x.qtd + 1 } : x)
-      return [...p, { ...item, qtd: 1 }]
-    })
-  }
+  const add = (item) => setCarrinho(prev => {
+    const ex = prev.find(x => x.id === item.id)
+    return ex
+      ? prev.map(x => x.id === item.id ? { ...x, qtd: x.qtd + 1 } : x)
+      : [...prev, { ...item, qtd: 1 }]
+  })
 
-  const total = pedido.reduce((s, x) => s + x.preco * x.qtd, 0)
+  const rm = (id) => setCarrinho(prev => {
+    const ex = prev.find(x => x.id === id)
+    if (!ex) return prev
+    return ex.qtd <= 1 ? prev.filter(x => x.id !== id) : prev.map(x => x.id === id ? { ...x, qtd: x.qtd - 1 } : x)
+  })
 
-  const enviarWpp = () => {
-    const linhas = pedido.map(x => `• ${x.qtd}x ${x.nome} — R$${(x.preco * x.qtd).toFixed(2)}`).join('\n')
+  const qtdOf = (id) => carrinho.find(x => x.id === id)?.qtd || 0
+  const total = carrinho.reduce((s, x) => s + x.preco * x.qtd, 0)
+  const totalItens = carrinho.reduce((s, x) => s + x.qtd, 0)
+
+  const pedirWpp = () => {
+    const linhas = carrinho.map(x => `• ${x.qtd}x ${x.nome} — R$${(x.preco * x.qtd).toFixed(2)}`).join('\n')
     const msg = encodeURIComponent(`Olá! Gostaria de fazer um pedido:\n\n${linhas}\n\n*Total: R$${total.toFixed(2)}*\n\nvia Hub Vila Olímpia 🏘️`)
     window.open(`https://wa.me/${comercio.whatsapp}?text=${msg}`, '_blank')
   }
 
   return (
-    <div className="page">
-      <Header title={`Cardápio — ${comercio.nome}`} back onBack={onBack} />
-      <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {itens.map((item, i) => (
-          <div key={item.id} className="card fade-up" style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
-            <span style={{ fontSize: 32 }}>{item.emoji}</span>
-            <div style={{ flex: 1 }}>
-              <p style={{ fontWeight: 600, fontSize: 15 }}>{item.nome}</p>
-              <p style={{ fontSize: 12, color: 'var(--txt2)', marginTop: 2 }}>{item.descricao}</p>
-              <p style={{ fontSize: 15, fontWeight: 700, color: 'var(--verde)', marginTop: 4 }}>R${item.preco.toFixed(2)}</p>
-            </div>
-            <button onClick={() => adicionar(item)} style={{
-              width: 36, height: 36, borderRadius: '50%',
-              background: 'var(--verde)', color: '#fff',
-              fontSize: 22, fontWeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>+</button>
-          </div>
-        ))}
+    <div className="page page-enter">
+      {/* Header */}
+      <div className="pg-header" style={{ background: comercio.cor }}>
+        <button className="back" style={{ color: 'rgba(255,255,255,0.85)' }} onClick={onBack}>← Voltar</button>
+        <h1 style={{ color: '#fff' }}>Cardápio</h1>
+        <p className="sub" style={{ color: 'rgba(255,255,255,0.75)' }}>{comercio.nome}</p>
       </div>
 
-      {pedido.length > 0 && (
-        <div style={{
-          position: 'fixed', bottom: 'calc(var(--tab-h) + 12px)', left: '50%', transform: 'translateX(-50%)',
-          width: 'calc(100% - 32px)', maxWidth: 400,
-          background: 'var(--verde)', color: '#fff',
-          borderRadius: 'var(--radius)', padding: '14px 20px',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          boxShadow: '0 4px 20px rgba(45,106,79,0.35)',
-          zIndex: 90,
-        }}>
+      {/* Hero */}
+      <div className="cat-hero" style={{ background: comercio.cor }}>
+        <div className="cat-emoji">{comercio.emoji}</div>
+        <p className="cat-sub">{comercio.descricao}</p>
+        {comercio.destaque && (
+          <div className="cat-destaque">🎉 {comercio.destaque}</div>
+        )}
+      </div>
+
+      {/* Título */}
+      <p className="cat-section-title">Os Mais Pedidos</p>
+
+      {/* Produtos */}
+      <div className="prod-list stagger">
+        {itens.map(item => {
+          const q = qtdOf(item.id)
+          return (
+            <div key={item.id} className={`card prod-card ${item.destaque ? 'prod-destaque' : ''}`}>
+              <span className="prod-emoji">{item.emoji}</span>
+              <div className="prod-info">
+                {item.destaque && <span className="mais-pedido">MAIS PEDIDO</span>}
+                <p className="prod-nome">{item.nome}</p>
+                <p className="prod-desc">{item.descricao}</p>
+                <p className="prod-preco">R${item.preco.toFixed(2)}</p>
+              </div>
+              <div className="prod-ctrl">
+                {q > 0 ? (
+                  <>
+                    <button className="ctrl-btn minus" onClick={() => rm(item.id)} style={{ background: '#ddd', color: '#666' }}>−</button>
+                    <span className="ctrl-qtd">{q}</span>
+                  </>
+                ) : null}
+                <button className="ctrl-btn plus" onClick={() => add(item)} style={{ background: comercio.cor }}>+</button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Cart bar */}
+      {carrinho.length > 0 && (
+        <div className="cart-bar">
           <div>
-            <p style={{ fontSize: 12, opacity: 0.8 }}>{pedido.reduce((s, x) => s + x.qtd, 0)} iten(s)</p>
-            <p style={{ fontSize: 18, fontWeight: 700 }}>R${total.toFixed(2)}</p>
+            <span className="cart-info">{totalItens} iten(s) selecionados</span>
+            <span className="cart-total">R${total.toFixed(2)}</span>
           </div>
-          <button className="btn-wpp" onClick={enviarWpp} style={{ background: '#fff', color: '#25D366' }}>
-            Pedir via WhatsApp
+          <button className="cart-btn" onClick={pedirWpp}>
+            Finalizar Pedido
           </button>
         </div>
       )}
@@ -74,45 +96,47 @@ function CatalogoView({ comercio, onBack }) {
   )
 }
 
-function ComercioDetalhe({ comercio, onBack }) {
-  const [verCatalogo, setVerCatalogo] = useState(false)
-
-  if (verCatalogo) return <CatalogoView comercio={comercio} onBack={() => setVerCatalogo(false)} />
+// ── DETALHE ─────────────────────────────────────────────────
+function Detalhe({ comercio, onBack }) {
+  const [verCat, setVerCat] = useState(false)
+  if (verCat) return <Catalogo comercio={comercio} onBack={() => setVerCat(false)} />
 
   return (
-    <div className="page">
-      <Header title={comercio.nome} back onBack={onBack} subtitle={categoriaLabel[comercio.categoria]} />
-      <div style={{ padding: '16px 16px 0' }}>
-        {/* Hero */}
-        <div className="card" style={{
-          background: comercio.cor, color: '#fff',
-          padding: '28px 24px', marginBottom: 12, textAlign: 'center',
-        }}>
-          <span style={{ fontSize: 52 }}>{comercio.emoji}</span>
-          <p style={{ marginTop: 8, fontSize: 14, opacity: 0.9 }}>{comercio.descricao}</p>
+    <div className="page page-enter">
+      <div className="pg-header" style={{ background: comercio.cor }}>
+        <button className="back" style={{ color: 'rgba(255,255,255,0.85)' }} onClick={onBack}>← Voltar</button>
+        <h1 style={{ color: '#fff' }}>{comercio.nome}</h1>
+      </div>
+
+      <div className="det-hero" style={{ background: comercio.cor }}>
+        <div className="det-placeholder" style={{ background: comercio.bg }}>{comercio.emoji}</div>
+        <p className="det-desc">{comercio.descricao}</p>
+        {comercio.destaque && <div className="det-destaque">🎉 {comercio.destaque}</div>}
+      </div>
+
+      <div className="det-body">
+        <div className="card det-info">
+          {[
+            ['📍', comercio.endereco],
+            ['📞', comercio.telefone],
+            [`⭐`, `${comercio.avaliacao} (${comercio.total_av} avaliações)`],
+            ['🕐', `Seg–Sex: ${comercio.horario.seg_sex}`],
+            ['',   `Sáb: ${comercio.horario.sab} · Dom: ${comercio.horario.dom}`],
+          ].map(([ic, txt], i) => (
+            <div key={i} className="info-row" style={i === 4 ? { border: 'none' } : {}}>
+              <span className="info-ic">{ic}</span>
+              <span className="info-txt">{txt}</span>
+            </div>
+          ))}
         </div>
 
-        {/* Info */}
-        <div className="card" style={{ padding: '14px 16px', marginBottom: 12 }}>
-          <InfoRow icon="📍" text={comercio.endereco} />
-          <InfoRow icon="📞" text={comercio.telefone} />
-          <InfoRow icon="🕐" text={`Seg–Sex: ${comercio.horario.seg_sex}`} />
-          <InfoRow icon="" text={`Sáb: ${comercio.horario.sab} · Dom: ${comercio.horario.dom}`} />
-        </div>
-
-        {/* Ações */}
-        <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
-          <a href={`https://wa.me/${comercio.whatsapp}`} target="_blank" rel="noreferrer"
-            className="btn-wpp" style={{ flex: 1, justifyContent: 'center' }}>
-            WhatsApp
+        <div className="det-btns">
+          <a href={`https://wa.me/${comercio.whatsapp}`} target="_blank" rel="noreferrer" className="btn-wpp">
+            💬 WhatsApp
           </a>
           {comercio.parceiro_plus && (
-            <button onClick={() => setVerCatalogo(true)} style={{
-              flex: 1, background: 'var(--amarelo)', color: '#fff',
-              borderRadius: 99, fontWeight: 600, fontSize: 14,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            }}>
-              🛍 Ver cardápio
+            <button className="btn-laranja" onClick={() => setVerCat(true)}>
+              🛍️ Ver cardápio
             </button>
           )}
         </div>
@@ -121,66 +145,55 @@ function ComercioDetalhe({ comercio, onBack }) {
   )
 }
 
-function InfoRow({ icon, text }) {
-  return (
-    <div style={{ display: 'flex', gap: 10, padding: '6px 0', borderBottom: '1px solid var(--border)', alignItems: 'flex-start' }}>
-      <span style={{ fontSize: 14, width: 20 }}>{icon}</span>
-      <span style={{ fontSize: 13, color: 'var(--txt2)', flex: 1 }}>{text}</span>
-    </div>
-  )
-}
-
+// ── LISTA ────────────────────────────────────────────────────
 export default function Comercios() {
   const [selecionado, setSelecionado] = useState(null)
   const [filtro, setFiltro] = useState('todos')
 
-  if (selecionado) return <ComercioDetalhe comercio={selecionado} onBack={() => setSelecionado(null)} />
+  if (selecionado) return <Detalhe comercio={selecionado} onBack={() => setSelecionado(null)} />
 
-  const categorias = ['todos', ...new Set(comercios.map(c => c.categoria))]
+  const cats = ['todos', ...new Set(comercios.map(c => c.categoria))]
   const lista = filtro === 'todos' ? comercios : comercios.filter(c => c.categoria === filtro)
 
   return (
-    <div className="page">
-      <Header title="Comércios" subtitle="Estabelecimentos da Vila Olímpia" />
+    <div className="page page-enter">
+      <div className="pg-header">
+        <h1>Comércios</h1>
+        <p className="sub">Vila Olímpia · Taubaté SP</p>
+      </div>
 
-      {/* Filtros */}
-      <div style={{ padding: '12px 16px', display: 'flex', gap: 8, overflowX: 'auto', scrollbarWidth: 'none' }}>
-        {categorias.map(cat => (
-          <button key={cat} onClick={() => setFiltro(cat)} style={{
-            padding: '6px 14px', borderRadius: 99, whiteSpace: 'nowrap',
-            fontSize: 12, fontWeight: 600,
-            background: filtro === cat ? 'var(--verde)' : 'var(--bg2)',
-            color: filtro === cat ? '#fff' : 'var(--txt2)',
-            transition: 'all 0.15s',
-            border: 'none',
-          }}>
-            {cat === 'todos' ? 'Todos' : categoriaLabel[cat] || cat}
+      <div className="chips">
+        {cats.map(c => (
+          <button key={c} className={`chip ${filtro === c ? 'on' : ''}`} onClick={() => setFiltro(c)}>
+            {c === 'todos' ? 'Todos' : catLabel[c] || c}
           </button>
         ))}
       </div>
 
-      <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {lista.map((c, i) => (
-          <button key={c.id} className="card fade-up" onClick={() => setSelecionado(c)}
-            style={{ padding: '14px 16px', display: 'flex', gap: 14, alignItems: 'center', width: '100%', textAlign: 'left' }}>
-            <div style={{
-              width: 52, height: 52, borderRadius: 14, flexShrink: 0,
-              background: c.cor, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 26,
-            }}>{c.emoji}</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-                <span style={{ fontWeight: 600, fontSize: 15 }}>{c.nome}</span>
-                {c.parceiro_plus && <span className="badge-plus">PLUS</span>}
+      <div className="com-list stagger">
+        {lista.map(c => (
+          <button key={c.id} className="com-card card" onClick={() => setSelecionado(c)}>
+            <div className="com-placeholder" style={{ background: c.bg }}>
+              <span>{c.emoji}</span>
+              <div className="com-overlay">
+                {c.parceiro_plus && <span className="badge-plus">PARCEIRO PLUS</span>}
+                <p className="com-nome">{c.nome}</p>
+                <p className="com-sub-img">{catLabel[c.categoria]} · {c.horario.seg_sex}</p>
               </div>
-              <span style={{ fontSize: 12, color: 'var(--txt3)', fontWeight: 500 }}>{categoriaLabel[c.categoria]}</span>
-              <p style={{ fontSize: 12, color: 'var(--txt2)', marginTop: 3, lineHeight: 1.4 }}>{c.descricao}</p>
             </div>
-            <span style={{ color: 'var(--txt3)', fontSize: 18 }}>›</span>
+            <div className="com-body">
+              <div className="com-info-row">
+                <span className="badge-open">ABERTO</span>
+                <span className="com-av">⭐ {c.avaliacao}</span>
+                <span className="com-end">{c.endereco.split('–')[0].trim()}</span>
+              </div>
+              <button className="btn-wpp" onClick={e => { e.stopPropagation(); window.open(`https://wa.me/${c.whatsapp}`, '_blank') }}>
+                💬 Pedir via WhatsApp
+              </button>
+            </div>
           </button>
         ))}
       </div>
-      <div style={{ height: 16 }} />
     </div>
   )
 }
