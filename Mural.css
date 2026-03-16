@@ -1,0 +1,98 @@
+.com-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px; }
+
+.com-card {
+  width: 100%; text-align: left;
+  background: none; border: none; padding: 0;
+  border-radius: var(--r);
+  transition: transform 0.12s;
+}
+.com-card:active { transform: scale(0.99); }
+
+.com-img {
+  width: 100%; height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; border-radius: var(--r) var(--r) 0 0;
+  overflow: hidden;
+}
+.com-big-emoji { font-size: 72px; opacity: 0.9; }
+.com-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 12px 14px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.68));
+}
+.com-overlay-top { margin-bottom: 4px; }
+.com-nome { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: #fff; }
+.com-sub  { font-size: 10px; color: rgba(255,255,255,0.8); margin-top: 1px; }
+
+.com-body { padding: 12px 14px; background: var(--surface); border-radius: 0 0 var(--r) var(--r); transition: background var(--transition); }
+.com-info-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.com-av  { font-size: 11px; color: var(--txt2); }
+.com-end { font-size: 10px; color: var(--txt3); margin-left: auto; }
+
+/* DETALHE */
+.det-hero {
+  padding: 24px 16px 28px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 10px;
+}
+.det-avatar {
+  width: 88px; height: 88px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 48px;
+  backdrop-filter: blur(8px);
+}
+.det-desc  { font-size: 13px; color: rgba(255,255,255,0.88); line-height: 1.55; max-width: 280px; }
+.det-badge {
+  background: rgba(255,255,255,0.18); border-radius: 8px;
+  padding: 6px 14px; font-size: 11px; font-weight: 600; color: #fff;
+}
+
+.det-info  { margin-bottom: 14px; }
+.info-row  {
+  display: flex; gap: 12px; padding: 9px 14px;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+  transition: border-color var(--transition);
+}
+.info-ic  { font-size: 14px; width: 20px; flex-shrink: 0; }
+.info-txt { font-size: 12px; color: var(--txt2); flex: 1; }
+
+.det-btns { display: flex; gap: 10px; }
+.det-btns .btn-wpp, .det-btns .btn-orange { flex: 1; }
+
+/* CATÁLOGO */
+.cat-hero {
+  padding: 20px 16px 24px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 8px;
+}
+.cat-emoji   { font-size: 56px; }
+.cat-desc    { font-size: 12px; color: rgba(255,255,255,0.85); max-width: 280px; line-height: 1.55; }
+.cat-destaque {
+  background: rgba(255,255,255,0.18); border-radius: 8px;
+  padding: 6px 14px; font-size: 11px; font-weight: 600; color: #fff;
+}
+.cat-section-title { padding: 16px 16px 8px; font-size: 14px; font-weight: 700; }
+
+.prod-list { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 100px; }
+.prod-card { padding: 13px 14px; display: flex; gap: 12px; align-items: center; }
+.prod-destaque { border-left: 3px solid var(--orange); }
+.prod-emoji  { font-size: 32px; flex-shrink: 0; }
+.prod-info   { flex: 1; }
+.mais-pedido {
+  font-size: 8px; font-weight: 800; background: var(--orange); color: #fff;
+  padding: 2px 8px; border-radius: 99px; display: inline-flex; margin-bottom: 4px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.prod-nome  { font-size: 13px; font-weight: 700; }
+.prod-desc  { font-size: 11px; color: var(--txt2); margin-top: 2px; }
+.prod-preco { font-size: 14px; font-weight: 700; color: #2D6A4F; margin-top: 5px; }
+[data-theme="dark"] .prod-preco { color: #6EE7A0; }
+
+.prod-ctrl { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.ctrl-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 18px; font-weight: 400;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.1s; border: none;
+}
+.ctrl-btn:active { transform: scale(0.9); }
+.ctrl-qtd { font-size: 14px; font-weight: 700; min-width: 20px; text-align: center; }

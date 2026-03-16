@@ -1,98 +1,94 @@
-.com-list { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px; }
+export const comercios = [
+  {
+    id: '1',
+    nome: 'Bar da Carmen',
+    categoria: 'bar',
+    descricao: 'Tradicional point do bairro. Petiscos, chopp gelado e boa conversa desde sempre.',
+    telefone: '(12) 99999-0001',
+    whatsapp: '5512999990001',
+    horario: { seg_sex: '16:00–23:00', sab: '12:00–00:00', dom: '12:00–20:00' },
+    endereco: 'Rua São José, 8 – Vila Olímpia',
+    parceiro_plus: true,
+    emoji: '🍺',
+    cor: '#7B3F00',
+    bg: '#F5EDE0',
+    avaliacao: 4.9,
+    total_av: '120+',
+    destaque: 'Happy Hour toda sexta a partir das 17h!',
+  },
+  {
+    id: '2',
+    nome: 'Mercadinho São José',
+    categoria: 'mercadinho',
+    descricao: 'Produtos frescos, hortifruti, mercearia completa. Delivery rápido pelo bairro.',
+    telefone: '(12) 99999-0002',
+    whatsapp: '5512999990002',
+    horario: { seg_sex: '07:00–20:00', sab: '07:00–18:00', dom: '08:00–12:00' },
+    endereco: 'Rua das Flores, 42 – Vila Olímpia',
+    parceiro_plus: true,
+    emoji: '🛒',
+    cor: '#2D6A4F',
+    bg: '#E8F5EC',
+    avaliacao: 4.7,
+    total_av: '80+',
+    destaque: 'Delivery rápido — peça pelo WhatsApp!',
+  },
+  {
+    id: '3',
+    nome: 'Farmácia Boa Saúde',
+    categoria: 'farmacia',
+    descricao: 'Medicamentos, perfumaria e atendimento humanizado. Manipulação e delivery.',
+    telefone: '(12) 99999-0003',
+    whatsapp: '5512999990003',
+    horario: { seg_sex: '08:00–22:00', sab: '08:00–20:00', dom: '09:00–13:00' },
+    endereco: 'Av. Vila Olímpia, 110 – Taubaté SP',
+    parceiro_plus: false,
+    emoji: '💊',
+    cor: '#1D6FA4',
+    bg: '#E8F0FF',
+    avaliacao: 4.8,
+    total_av: '60+',
+    destaque: null,
+  },
+];
 
-.com-card {
-  width: 100%; text-align: left;
-  background: none; border: none; padding: 0;
-  border-radius: var(--r);
-  transition: transform 0.12s;
-}
-.com-card:active { transform: scale(0.99); }
+export const catalogo = {
+  '1': [
+    { id: 'c1p1', nome: 'Combo Happy Hour',    descricao: '2 chopps + fritas + calabresa',         preco: 65.00, emoji: '🎉', destaque: true  },
+    { id: 'c1p2', nome: 'Porção de Calabresa', descricao: 'Acebolada, serve 2 pessoas',            preco: 28.00, emoji: '🌭', destaque: false },
+    { id: 'c1p3', nome: 'Porção de Fritas',    descricao: 'Crocante com molho especial da Carmen', preco: 22.00, emoji: '🍟', destaque: false },
+    { id: 'c1p4', nome: 'Chopp 500ml',         descricao: 'Gelado na temperatura certa',           preco: 12.00, emoji: '🍺', destaque: false },
+    { id: 'c1p5', nome: 'Pão de Alho (6 un)',  descricao: 'Amanteigado e gratinado',               preco: 14.00, emoji: '🧄', destaque: false },
+    { id: 'c1p6', nome: 'Refrigerante Lata',   descricao: 'Coca, Guaraná ou Sprite 350ml',        preco: 6.00,  emoji: '🥤', destaque: false },
+  ],
+  '2': [
+    { id: 'c2p1', nome: 'Combo Feira',         descricao: 'Arroz 5kg + feijão 1kg + frango',      preco: 49.90, emoji: '🛍️', destaque: true  },
+    { id: 'c2p2', nome: 'Cesta de Frutas',     descricao: 'Banana, maçã, laranja e uva',          preco: 28.90, emoji: '🍎', destaque: false },
+    { id: 'c2p3', nome: 'Frango Inteiro (kg)', descricao: 'Resfriado, fornecedor local',           preco: 14.50, emoji: '🍗', destaque: false },
+    { id: 'c2p4', nome: 'Pão Francês (6 un)',  descricao: 'Fresquinho entregue toda manhã',       preco: 3.50,  emoji: '🥖', destaque: false },
+    { id: 'c2p5', nome: 'Arroz 5kg',           descricao: 'Tipo 1, grãos selecionados',           preco: 24.90, emoji: '🍚', destaque: false },
+    { id: 'c2p6', nome: 'Refrigerante 2L',     descricao: 'Diversas marcas e sabores',            preco: 8.90,  emoji: '🥤', destaque: false },
+  ],
+};
 
-.com-img {
-  width: 100%; height: 160px;
-  display: flex; align-items: center; justify-content: center;
-  position: relative; border-radius: var(--r) var(--r) 0 0;
-  overflow: hidden;
-}
-.com-big-emoji { font-size: 72px; opacity: 0.9; }
-.com-overlay {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 12px 14px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.68));
-}
-.com-overlay-top { margin-bottom: 4px; }
-.com-nome { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: #fff; }
-.com-sub  { font-size: 10px; color: rgba(255,255,255,0.8); margin-top: 1px; }
+export const feed = [
+  { id: 'f1', tipo: 'promocao', titulo: '🍺 Happy Hour hoje a partir das 17h!', conteudo: 'Chopp a R$10 e porção de fritas com 20% off. Só no Bar da Carmen.', comercio: 'Bar da Carmen', tempo: '30 min', cor: '#7B3F00', tagBg: '#FFF0E8', tagCor: '#E8622A' },
+  { id: 'f2', tipo: 'promocao', titulo: '🛒 Frango a R$12,90/kg hoje!', conteudo: 'Promoção relâmpago no Mercadinho São José. Enquanto durar o estoque.', comercio: 'Mercadinho São José', tempo: '1h', cor: '#2D6A4F', tagBg: '#E8F5EC', tagCor: '#2D6A4F' },
+  { id: 'f3', tipo: 'aviso', titulo: '⚠️ Obras na Rua das Flores', conteudo: 'Prefeitura realiza manutenção até sexta-feira. Desvie pela Av. Vila Olímpia.', comercio: null, tempo: '3h', cor: '#C0392B', tagBg: '#FFECEC', tagCor: '#C0392B' },
+  { id: 'f4', tipo: 'evento', titulo: '🎉 Festa junina na praça', conteudo: 'Sábado que vem! Quadrilha, comidas típicas e sorteios. Entrada gratuita.', comercio: null, tempo: '5h', cor: '#8B44AC', tagBg: '#F3E8FF', tagCor: '#8B44AC' },
+  { id: 'f5', tipo: 'promocao', titulo: '💊 15% off em vitaminas', conteudo: 'Toda linha vitaminas C e D com desconto. Farmácia Boa Saúde.', comercio: 'Farmácia Boa Saúde', tempo: '8h', cor: '#1D6FA4', tagBg: '#E8F0FF', tagCor: '#1D6FA4' },
+];
 
-.com-body { padding: 12px 14px; background: var(--surface); border-radius: 0 0 var(--r) var(--r); transition: background var(--transition); }
-.com-info-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-.com-av  { font-size: 11px; color: var(--txt2); }
-.com-end { font-size: 10px; color: var(--txt3); margin-left: auto; }
+export const mural = [
+  { id: 'm1', categoria: 'alerta',     titulo: '🚧 Obras na Rua das Flores',       descricao: 'Desvio obrigatório pela Av. Vila Olímpia até sexta. Atenção motoristas.',          tempo: '15 min', tagBg: '#C0392B', btnTipo: 'red',    btnLabel: 'Ver detalhes' },
+  { id: 'm2', categoria: 'achado',     titulo: '🔑 Chaves de Carro Encontradas',   descricao: 'Molho de chaves encontrado na calçada da Av. Vila Olímpia, próximo ao nº 114.',   tempo: '2h',     tagBg: '#2D6A4F', btnTipo: 'wpp',    btnLabel: 'Entrar em contato' },
+  { id: 'm3', categoria: 'perdido',    titulo: '🐕 Perdido: cachorro Bolinha',     descricao: 'Vira-lata caramelo, coleira azul. Sumiu perto da praça. Ligue (12) 99888-7766.',   tempo: '1 dia',  tagBg: '#A16207', btnTipo: 'wpp',    btnLabel: 'Entrar em contato' },
+  { id: 'm4', categoria: 'informacao', titulo: '💡 Reunião do Conselho de Bairros',descricao: 'Pauta: Segurança e iluminação das ruas. Local: Salão Paroquial às 19h30.',          tempo: '5h',     tagBg: '#1D6FA4', btnTipo: 'orange', btnLabel: 'Agendar' },
+];
 
-/* DETALHE */
-.det-hero {
-  padding: 24px 16px 28px;
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center; gap: 10px;
-}
-.det-avatar {
-  width: 88px; height: 88px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; font-size: 48px;
-  backdrop-filter: blur(8px);
-}
-.det-desc  { font-size: 13px; color: rgba(255,255,255,0.88); line-height: 1.55; max-width: 280px; }
-.det-badge {
-  background: rgba(255,255,255,0.18); border-radius: 8px;
-  padding: 6px 14px; font-size: 11px; font-weight: 600; color: #fff;
-}
-
-.det-info  { margin-bottom: 14px; }
-.info-row  {
-  display: flex; gap: 12px; padding: 9px 14px;
-  border-bottom: 1px solid var(--border); align-items: flex-start;
-  transition: border-color var(--transition);
-}
-.info-ic  { font-size: 14px; width: 20px; flex-shrink: 0; }
-.info-txt { font-size: 12px; color: var(--txt2); flex: 1; }
-
-.det-btns { display: flex; gap: 10px; }
-.det-btns .btn-wpp, .det-btns .btn-orange { flex: 1; }
-
-/* CATÁLOGO */
-.cat-hero {
-  padding: 20px 16px 24px;
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center; gap: 8px;
-}
-.cat-emoji   { font-size: 56px; }
-.cat-desc    { font-size: 12px; color: rgba(255,255,255,0.85); max-width: 280px; line-height: 1.55; }
-.cat-destaque {
-  background: rgba(255,255,255,0.18); border-radius: 8px;
-  padding: 6px 14px; font-size: 11px; font-weight: 600; color: #fff;
-}
-.cat-section-title { padding: 16px 16px 8px; font-size: 14px; font-weight: 700; }
-
-.prod-list { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 100px; }
-.prod-card { padding: 13px 14px; display: flex; gap: 12px; align-items: center; }
-.prod-destaque { border-left: 3px solid var(--orange); }
-.prod-emoji  { font-size: 32px; flex-shrink: 0; }
-.prod-info   { flex: 1; }
-.mais-pedido {
-  font-size: 8px; font-weight: 800; background: var(--orange); color: #fff;
-  padding: 2px 8px; border-radius: 99px; display: inline-flex; margin-bottom: 4px;
-  text-transform: uppercase; letter-spacing: 0.04em;
-}
-.prod-nome  { font-size: 13px; font-weight: 700; }
-.prod-desc  { font-size: 11px; color: var(--txt2); margin-top: 2px; }
-.prod-preco { font-size: 14px; font-weight: 700; color: #2D6A4F; margin-top: 5px; }
-[data-theme="dark"] .prod-preco { color: #6EE7A0; }
-
-.prod-ctrl { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
-.ctrl-btn {
-  width: 32px; height: 32px; border-radius: 50%;
-  font-size: 18px; font-weight: 400;
-  display: flex; align-items: center; justify-content: center;
-  transition: transform 0.1s; border: none;
-}
-.ctrl-btn:active { transform: scale(0.9); }
-.ctrl-qtd { font-size: 14px; font-weight: 700; min-width: 20px; text-align: center; }
+export const prestadores = [
+  { id: 'a1', nome: 'Ricardo Elétrica',   especialidade: 'Eletricista Residencial', descricao: 'Instalações, reparos e laudos ART. Rápido e com garantia.',         whatsapp: '5512999990010', avaliacao: 4.9, emoji: '⚡', dist: '1.2 km' },
+  { id: 'a2', nome: 'Paulo Encanador',    especialidade: 'Encanador Hidráulico',    descricao: 'Vazamentos, instalações e desentupimento. Atende emergência.',        whatsapp: '5512999990011', avaliacao: 4.7, emoji: '💧', dist: '2.5 km' },
+  { id: 'a3', nome: 'Dona Lúcia Costura', especialidade: 'Costureira',              descricao: 'Consertos, ajustes e roupas sob medida. 20 anos no bairro.',          whatsapp: '5512999990012', avaliacao: 5.0, emoji: '🧵', dist: '0.8 km' },
+  { id: 'a4', nome: 'Fernanda Pinturas',  especialidade: 'Pintura e Acabamento',    descricao: 'Residencial e comercial. Acabamento fino e pontualidade.',             whatsapp: '5512999990013', avaliacao: 4.8, emoji: '🎨', dist: '1.8 km' },
+];

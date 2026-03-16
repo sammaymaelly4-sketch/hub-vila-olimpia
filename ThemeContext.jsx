@@ -1,24 +1,86 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ThemeProvider } from './context/ThemeContext'
-import BottomNav from './components/BottomNav'
-import Inicio    from './pages/Inicio'
-import Comercios from './pages/Comercios'
-import Mural     from './pages/Mural'
-import Servicos  from './pages/Servicos'
-import './index.css'
-
-export default function App() {
-  return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/"          element={<Inicio />} />
-          <Route path="/comercios" element={<Comercios />} />
-          <Route path="/mural"     element={<Mural />} />
-          <Route path="/servicos"  element={<Servicos />} />
-        </Routes>
-        <BottomNav />
-      </BrowserRouter>
-    </ThemeProvider>
-  )
+.inicio-top {
+  background: var(--surface);
+  padding: 18px 16px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
 }
+.inicio-avatar { display: flex; align-items: center; gap: 12px; }
+.avatar-ring {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--orange-l);
+  border: 2.5px solid var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.greeting-sub  { font-size: 12px; color: var(--txt2); }
+.greeting-main { font-size: 22px; font-family: 'Fraunces', serif; }
+
+.top-actions { display: flex; gap: 8px; align-items: center; }
+.bell-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--surface2); font-size: 17px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--border);
+  transition: background var(--transition);
+}
+.bell-btn:active { transform: scale(0.9); }
+
+.section-label {
+  padding: 16px 16px 10px;
+  font-size: 13px; font-weight: 700; color: var(--txt);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* QUICK CARDS */
+.q-cards { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.q-card {
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; text-align: left;
+  background: var(--surface);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  border: none;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.q-card:active { transform: scale(0.98); box-shadow: none; }
+.q-icon {
+  width: 50px; height: 50px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+}
+[data-theme="dark"] .q-icon { filter: brightness(0.85); }
+.q-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.q-name { font-size: 14px; font-weight: 700; }
+.q-sub  { font-size: 11px; color: var(--txt2); }
+.q-arr  { color: var(--txt3); font-size: 20px; }
+
+/* HERO */
+.hero-wrap { padding: 0 16px; margin-bottom: 4px; }
+.hero-inner {
+  border-radius: var(--r);
+  padding: 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.hero-emoji  { font-size: 48px; flex-shrink: 0; }
+.hero-eyebrow { font-size: 10px; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; color: #fff; margin-bottom: 4px; }
+.hero-title  { font-family: 'Fraunces', serif; font-size: 18px; color: #fff; margin-bottom: 4px; line-height: 1.2; }
+.hero-sub    { font-size: 12px; color: rgba(255,255,255,0.8); }
+
+/* FEED */
+.feed-list { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 8px; }
+.feed-card { padding: 13px 14px; border-left: 3px solid; }
+.feed-top  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+.feed-tag  {
+  font-size: 9px; font-weight: 800;
+  padding: 3px 9px; border-radius: 99px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+[data-theme="dark"] .feed-tag {
+  filter: brightness(0.85) saturate(0.9);
+}
+.feed-time   { font-size: 10px; color: var(--txt3); }
+.feed-titulo { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.feed-corpo  { font-size: 12px; color: var(--txt2); line-height: 1.55; }
+.feed-local  { font-size: 10px; color: var(--txt3); margin-top: 7px; font-weight: 600; }
