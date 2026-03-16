@@ -32,29 +32,47 @@
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 
-/* QUICK CARDS */
-.q-cards { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.q-card {
-  padding: 14px 16px;
-  display: flex; align-items: center; gap: 14px;
-  width: 100%; text-align: left;
+/* FLASHCARDS */
+.flashcards-container {
+  margin-bottom: 24px;
+}
+.flashcards {
+  display: flex; gap: 12px;
+  padding: 4px 16px 8px; /* Extra bottom padding for shadow */
+  overflow-x: auto; scrollbar-width: none;
+  scroll-behavior: smooth; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+}
+.flashcards::-webkit-scrollbar { display: none; }
+.flashcards::after {
+  content: ''; flex-shrink: 0; width: 4px; /* Trailing space */
+}
+.flashcard {
+  flex-shrink: 0; width: 104px; height: 112px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
   background: var(--surface);
   border-radius: var(--r);
   box-shadow: var(--shadow);
-  border: none;
-  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+  border: 1px solid var(--border);
+  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), filter var(--transition);
+  scroll-snap-align: start;
 }
-.q-card:active { transform: scale(0.985); box-shadow: none; }
-.q-icon {
-  width: 50px; height: 50px; border-radius: 14px;
+.flashcard:active {
+  transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.05); filter: brightness(0.97);
+}
+.fc-icon {
+  font-size: 32px;
+  width: 48px; height: 48px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 26px; flex-shrink: 0;
+  background: color-mix(in srgb, var(--fc) 12%, transparent);
 }
-[data-theme="dark"] .q-icon { filter: brightness(0.85); }
-.q-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
-.q-name { font-size: 14px; font-weight: 700; }
-.q-sub  { font-size: 11px; color: var(--txt2); }
-.q-arr  { color: var(--txt3); font-size: 20px; }
+[data-theme="dark"] .fc-icon {
+  background: color-mix(in srgb, var(--fc) 25%, transparent);
+}
+.fc-name {
+  font-size: 13px; font-weight: 700; color: var(--txt);
+  letter-spacing: 0.02em;
+}
 
 /* HERO */
 .hero-wrap { padding: 0 16px; margin-bottom: 4px; }

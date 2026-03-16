@@ -51,22 +51,31 @@ function Catalogo({ comercio, onBack }) {
         {itens.map(item => {
           const q = qtdOf(item.id)
           return (
-            <div key={item.id} className={`card prod-card${item.destaque ? ' prod-destaque' : ''}`}>
-              <span className="prod-emoji">{item.emoji}</span>
+            <div key={item.id} className="prod-card">
               <div className="prod-info">
-                {item.destaque && <span className="mais-pedido">MAIS PEDIDO</span>}
                 <p className="prod-nome">{item.nome}</p>
                 <p className="prod-desc">{item.descricao}</p>
-                <p className="prod-preco">R${item.preco.toFixed(2)}</p>
+                <div className="prod-footer">
+                  <span className="prod-preco">R$ {item.preco.toFixed(2)}</span>
+                  {item.destaque && <span className="mais-pedido" style={{ background: comercio.cor }}>⭐ MAIS PEDIDO</span>}
+                </div>
               </div>
-              <div className="prod-ctrl">
-                {q > 0 && (
-                  <>
-                    <button className="ctrl-btn" onClick={() => rm(item.id)} style={{ background: 'var(--surface2)', color: 'var(--txt)' }}>−</button>
+              
+              <div className="prod-visual">
+                <div className="prod-imagem">
+                  <span className="prod-emoji">{item.emoji}</span>
+                </div>
+                {q === 0 ? (
+                  <button className="add-btn" onClick={() => add(item)} style={{ color: comercio.cor, borderColor: comercio.cor }}>
+                    Adicionar
+                  </button>
+                ) : (
+                  <div className="prod-ctrl" style={{ borderColor: comercio.cor }}>
+                    <button className="ctrl-btn" onClick={() => rm(item.id)} style={{ color: comercio.cor }}>−</button>
                     <span className="ctrl-qtd">{q}</span>
-                  </>
+                    <button className="ctrl-btn" onClick={() => add(item)} style={{ color: comercio.cor }}>+</button>
+                  </div>
                 )}
-                <button className="ctrl-btn" onClick={() => add(item)} style={{ background: comercio.cor, color: '#fff' }}>+</button>
               </div>
             </div>
           )

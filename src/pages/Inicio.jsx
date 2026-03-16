@@ -31,31 +31,29 @@ export default function Inicio() {
 
       {/* QUICK ACCESS */}
       <p className="section-label">O que você precisa hoje?</p>
-      <div className="q-cards stagger">
-        <button className="q-card card" onClick={() => navigate('/mural')}>
-          <div className="q-icon" style={{ background: 'var(--orange-l)' }}>📣</div>
-          <div className="q-info">
-            <span className="q-name">Mural da Vila</span>
-            <span className="q-sub">Notícias e avisos locais</span>
-          </div>
-          <span className="q-arr">›</span>
-        </button>
-        <button className="q-card card" onClick={() => navigate('/servicos')}>
-          <div className="q-icon" style={{ background: '#EEF2FF' }}>🔧</div>
-          <div className="q-info">
-            <span className="q-name">Serviços Locais</span>
-            <span className="q-sub">Pedreiros, eletricistas e mais</span>
-          </div>
-          <span className="q-arr">›</span>
-        </button>
-        <button className="q-card card" onClick={() => navigate('/comercios')}>
-          <div className="q-icon" style={{ background: '#ECFDF5' }}>🏪</div>
-          <div className="q-info">
-            <span className="q-name">Comércio</span>
-            <span className="q-sub">Lojas e mercados próximos</span>
-          </div>
-          <span className="q-arr">›</span>
-        </button>
+      <div className="flashcards-container stagger">
+        <div className="flashcards">
+          <button className="flashcard" onClick={() => navigate('/mural')} style={{ '--fc': 'var(--orange)' }}>
+            <span className="fc-icon">📣</span>
+            <span className="fc-name">Mural</span>
+          </button>
+          <button className="flashcard" onClick={() => navigate('/servicos')} style={{ '--fc': '#4F46E5' }}>
+            <span className="fc-icon">🔧</span>
+            <span className="fc-name">Serviços</span>
+          </button>
+          <button className="flashcard" onClick={() => navigate('/comercios')} style={{ '--fc': '#10B981' }}>
+            <span className="fc-icon">🏪</span>
+            <span className="fc-name">Comércio</span>
+          </button>
+          <button className="flashcard" onClick={() => window.alert('Eventos em breve!')} style={{ '--fc': '#D97706' }}>
+            <span className="fc-icon">🎫</span>
+            <span className="fc-name">Eventos</span>
+          </button>
+          <button className="flashcard" onClick={() => window.alert('Doações em breve!')} style={{ '--fc': '#DB2777' }}>
+            <span className="fc-icon">❤️</span>
+            <span className="fc-name">Doações</span>
+          </button>
+        </div>
       </div>
 
       {/* HERO DESTAQUE */}
