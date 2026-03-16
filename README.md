@@ -1,10 +1,12 @@
-# 🏘️ Hub Vila Olímpia — MVP
+# 🏘️ Hub Vila Olímpia — v1.1
 
-PWA do bairro Vila Olímpia, Taubaté SP.
+PWA do bairro Vila Olímpia, Taubaté SP.  
+Design system completo com **light mode** e **dark mode** nativo.
 
 ## Stack
-- React 19 + Vite + React Router DOM
+- React 19 + Vite 8 + React Router DOM 7
 - CSS puro com variáveis (sem Tailwind)
+- Dark mode via `data-theme` no `<html>` + `localStorage`
 - Dados mockados em `src/data/mock.js`
 - PWA manifest incluso
 
@@ -14,34 +16,39 @@ npm install
 npm run dev
 ```
 
-## Deploy no Vercel (passo a passo)
+## Deploy no Vercel
 
 ### 1. GitHub
 ```bash
 git init
 git add .
-git commit -m "feat: MVP Hub Vila Olímpia"
-# Crie repo em github.com/new
+git commit -m "feat: Hub Vila Olímpia v1.1 — dark mode + redesign"
 git remote add origin https://github.com/SEU_USUARIO/hub-vila-olimpia.git
 git branch -M main
 git push -u origin main
 ```
 
 ### 2. Vercel
-1. Acesse vercel.com → **Add New Project**
-2. Importe o repositório `hub-vila-olimpia`
+1. vercel.com → **Add New Project**
+2. Importe o repositório
 3. Framework: **Vite** (detectado automaticamente)
-4. Clique em **Deploy**
-5. ✅ URL pública em ~30 segundos
+4. **Deploy** → URL pública em ~30s
 
-## Instalar como PWA no celular
+## Instalar como PWA
 - **Android**: Chrome → menu ⋮ → "Adicionar à tela inicial"
 - **iOS**: Safari → botão compartilhar → "Adicionar à Tela de Início"
+
+## Dark Mode
+- Toggle 🌙/☀️ no header da tela Início
+- Persiste via `localStorage`
+- Respeita preferência do sistema (`prefers-color-scheme`) no primeiro acesso
 
 ## Estrutura
 ```
 src/
-├── data/mock.js          ← edite aqui os dados
+├── context/
+│   └── ThemeContext.jsx     ← dark/light mode state
+├── data/mock.js             ← edite aqui os dados
 ├── components/
 │   ├── BottomNav.jsx
 │   └── BottomNav.css
@@ -52,25 +59,24 @@ src/
 │   └── Servicos.jsx + .css
 ├── App.jsx
 ├── main.jsx
-└── index.css
+└── index.css                ← tokens CSS (light + dark)
 ```
 
-## Editar dados
-Abra `src/data/mock.js`:
-- `comercios` → estabelecimentos (nome, whatsapp, horário, cor...)
-- `catalogo`  → produtos por comércio (chave = id do comércio)
-- `feed`      → publicações da home
-- `mural`     → posts de vigilância/avisos
-- `prestadores` → autônomos e serviços
+## Tokens CSS (index.css)
+| Token        | Light       | Dark        |
+|--------------|-------------|-------------|
+| `--bg`       | `#F5F4F0`   | `#111110`   |
+| `--surface`  | `#FFFFFF`   | `#1C1C1A`   |
+| `--surface2` | `#F0EFE9`   | `#252523`   |
+| `--border`   | `#E8E6E0`   | `#2A2A28`   |
+| `--txt`      | `#1C1C1A`   | `#F0EFE9`   |
+| `--orange`   | `#E8622A`   | `#E8622A`   |
 
-### Ativar Parceiro Plus
-```js
-parceiro_plus: true  // libera aba de catálogo
-```
-
-## Próximos passos (Fase 2)
-- [ ] Conectar Supabase (substituir mock.js)
+## Fase 2
+- [ ] Supabase (substituir mock.js)
 - [ ] Painel admin do comerciante
-- [ ] Notificações push
-- [ ] Foto real dos comércios (substituir emoji/placeholder)
-- [ ] Mapa com pins dos estabelecimentos
+- [ ] Push notifications
+- [ ] Fotos reais dos comércios
+- [ ] Mapa com pins (Leaflet)
+- [ ] Busca funcional com debounce
+- [ ] Status aberto/fechado real (baseado em horário)

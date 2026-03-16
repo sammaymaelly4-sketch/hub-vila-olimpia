@@ -1,0 +1,24 @@
+.mural-hdr { display: flex; align-items: flex-start; justify-content: space-between; }
+.mural-list { padding: 0 16px; display: flex; flex-direction: column; gap: 14px; padding-bottom: 100px; }
+
+.mural-card { overflow: hidden; border-radius: var(--r); }
+.mural-img {
+  width: 100%; height: 140px;
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 64px;
+  transition: background var(--transition);
+}
+.mural-big-emoji { opacity: 0.85; }
+
+.mural-body { padding: 13px 14px; }
+.mural-tag-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.mural-tag {
+  font-size: 9px; font-weight: 800;
+  padding: 3px 10px; border-radius: 99px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.mural-time   { font-size: 10px; color: var(--txt3); }
+.mural-titulo { font-size: 15px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+.mural-desc   { font-size: 12px; color: var(--txt2); line-height: 1.6; margin-bottom: 12px; }
+.mural-btns   { }
