@@ -1,24 +1,191 @@
-.mural-hdr { display: flex; align-items: flex-start; justify-content: space-between; }
-.mural-list { padding: 0 16px; display: flex; flex-direction: column; gap: 14px; padding-bottom: 100px; }
+import { useState } from 'react'
+import { comercios, catalogo } from '../data/mock'
+import './Comercios.css'
 
-.mural-card { overflow: hidden; border-radius: var(--r); }
-.mural-img {
-  width: 100%; height: 140px;
-  background: var(--surface2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 64px;
-  transition: background var(--transition);
-}
-.mural-big-emoji { opacity: 0.85; }
+const catLabel = { bar: 'Bar', mercadinho: 'Mercadinho', farmacia: 'Farmácia' }
 
-.mural-body { padding: 13px 14px; }
-.mural-tag-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.mural-tag {
-  font-size: 9px; font-weight: 800;
-  padding: 3px 10px; border-radius: 99px;
-  text-transform: uppercase; letter-spacing: 0.05em;
+// ── CATÁLOGO ─────────────────────────────────────────────
+function Catalogo({ comercio, onBack }) {
+  const itens = catalogo[comercio.id] || []
+  const [carrinho, setCarrinho] = useState([])
+
+  const add = (item) => setCarrinho(prev => {
+    const ex = prev.find(x => x.id === item.id)
+    return ex ? prev.map(x => x.id === item.id ? { ...x, qtd: x.qtd + 1 } : x)
+              : [...prev, { ...item, qtd: 1 }]
+  })
+  const rm = (id) => setCarrinho(prev => {
+    const ex = prev.find(x => x.id === id)
+    if (!ex) return prev
+    return ex.qtd <= 1 ? prev.filter(x => x.id !== id)
+                       : prev.map(x => x.id === id ? { ...x, qtd: x.qtd - 1 } : x)
+  })
+
+  const qtdOf = (id) => carrinho.find(x => x.id === id)?.qtd || 0
+  const total = carrinho.reduce((s, x) => s + x.preco * x.qtd, 0)
+  const totalItens = carrinho.reduce((s, x) => s + x.qtd, 0)
+
+  const pedirWpp = () => {
+    const linhas = carrinho.map(x => `• ${x.qtd}x ${x.nome} — R$${(x.preco*x.qtd).toFixed(2)}`).join('\n')
+    const msg = encodeURIComponent(`Olá! Gostaria de fazer um pedido:\n\n${linhas}\n\n*Total: R$${total.toFixed(2)}*\n\nvia Hub Vila Olímpia 🏘️`)
+    window.open(`https://wa.me/${comercio.whatsapp}?text=${msg}`, '_blank')
+  }
+
+  return (
+    <div className="page page-enter">
+      <div className="pg-header" style={{ background: comercio.cor, borderColor: 'transparent' }}>
+        <button className="back" style={{ color: 'rgba(255,255,255,0.85)' }} onClick={onBack}>← Voltar</button>
+        <h1 style={{ color: '#fff' }}>Cardápio</h1>
+        <p className="sub" style={{ color: 'rgba(255,255,255,0.7)' }}>{comercio.nome}</p>
+      </div>
+
+      <div className="cat-hero" style={{ background: `linear-gradient(160deg, ${comercio.cor}, ${comercio.cor}CC)` }}>
+        <div className="cat-emoji">{comercio.emoji}</div>
+        <p className="cat-desc">{comercio.descricao}</p>
+        {comercio.destaque && <div className="cat-destaque">🎉 {comercio.destaque}</div>}
+      </div>
+
+      <p className="cat-section-title">Os Mais Pedidos</p>
+
+      <div className="prod-list stagger">
+        {itens.map(item => {
+          const q = qtdOf(item.id)
+          return (
+            <div key={item.id} className={`card prod-card${item.destaque ? ' prod-destaque' : ''}`}>
+              <span className="prod-emoji">{item.emoji}</span>
+              <div className="prod-info">
+                {item.destaque && <span className="mais-pedido">MAIS PEDIDO</span>}
+                <p className="prod-nome">{item.nome}</p>
+                <p className="prod-desc">{item.descricao}</p>
+                <p className="prod-preco">R${item.preco.toFixed(2)}</p>
+              </div>
+              <div className="prod-ctrl">
+                {q > 0 && (
+                  <>
+                    <button className="ctrl-btn" onClick={() => rm(item.id)} style={{ background: 'var(--surface2)', color: 'var(--txt)' }}>−</button>
+                    <span className="ctrl-qtd">{q}</span>
+                  </>
+                )}
+                <button className="ctrl-btn" onClick={() => add(item)} style={{ background: comercio.cor, color: '#fff' }}>+</button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {carrinho.length > 0 && (
+        <div className="cart-bar">
+          <div>
+            <span className="cart-info">{totalItens} item(s)</span>
+            <span className="cart-total">R${total.toFixed(2)}</span>
+          </div>
+          <button className="cart-cta" onClick={pedirWpp}>Finalizar Pedido</button>
+        </div>
+      )}
+    </div>
+  )
 }
-.mural-time   { font-size: 10px; color: var(--txt3); }
-.mural-titulo { font-size: 15px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
-.mural-desc   { font-size: 12px; color: var(--txt2); line-height: 1.6; margin-bottom: 12px; }
-.mural-btns   { }
+
+// ── DETALHE ──────────────────────────────────────────────
+function Detalhe({ comercio, onBack }) {
+  const [verCat, setVerCat] = useState(false)
+  if (verCat) return <Catalogo comercio={comercio} onBack={() => setVerCat(false)} />
+
+  return (
+    <div className="page page-enter">
+      <div className="pg-header" style={{ background: comercio.cor, borderColor: 'transparent' }}>
+        <button className="back" style={{ color: 'rgba(255,255,255,0.85)' }} onClick={onBack}>← Voltar</button>
+        <h1 style={{ color: '#fff' }}>{comercio.nome}</h1>
+      </div>
+
+      <div className="det-hero" style={{ background: `linear-gradient(160deg, ${comercio.cor}, ${comercio.cor}BB)` }}>
+        <div className="det-avatar" style={{ background: 'rgba(255,255,255,0.15)' }}>{comercio.emoji}</div>
+        <p className="det-desc">{comercio.descricao}</p>
+        {comercio.destaque && <div className="det-badge">🎉 {comercio.destaque}</div>}
+      </div>
+
+      <div style={{ padding: '14px 16px' }}>
+        <div className="card det-info">
+          {[
+            ['📍', comercio.endereco],
+            ['📞', comercio.telefone],
+            ['⭐', `${comercio.avaliacao} (${comercio.total_av} avaliações)`],
+            ['🕐', `Seg–Sex: ${comercio.horario.seg_sex}`],
+            ['', `Sáb: ${comercio.horario.sab}  ·  Dom: ${comercio.horario.dom}`],
+          ].map(([ic, txt], i) => (
+            <div key={i} className="info-row" style={i === 4 ? { border: 'none' } : {}}>
+              <span className="info-ic">{ic}</span>
+              <span className="info-txt">{txt}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="det-btns">
+          <a href={`https://wa.me/${comercio.whatsapp}`} target="_blank" rel="noreferrer" className="btn-wpp">
+            💬 WhatsApp
+          </a>
+          {comercio.parceiro_plus && (
+            <button className="btn-orange" onClick={() => setVerCat(true)}>
+              🛍️ Ver cardápio
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── LISTA ─────────────────────────────────────────────────
+export default function Comercios() {
+  const [selecionado, setSelecionado] = useState(null)
+  const [filtro, setFiltro] = useState('todos')
+
+  if (selecionado) return <Detalhe comercio={selecionado} onBack={() => setSelecionado(null)} />
+
+  const cats = ['todos', ...new Set(comercios.map(c => c.categoria))]
+  const lista = filtro === 'todos' ? comercios : comercios.filter(c => c.categoria === filtro)
+
+  return (
+    <div className="page page-enter">
+      <div className="pg-header">
+        <h1>Comércios</h1>
+        <p className="sub">Vila Olímpia · Taubaté SP</p>
+      </div>
+
+      <div className="chips">
+        {cats.map(c => (
+          <button key={c} className={`chip${filtro === c ? ' on' : ''}`} onClick={() => setFiltro(c)}>
+            {c === 'todos' ? 'Todos' : catLabel[c] || c}
+          </button>
+        ))}
+      </div>
+
+      <div className="com-list stagger">
+        {lista.map(c => (
+          <button key={c.id} className="com-card card" onClick={() => setSelecionado(c)}>
+            <div className="com-img" style={{ background: `linear-gradient(135deg, ${c.bg}, ${c.cor}22)` }}>
+              <span className="com-big-emoji">{c.emoji}</span>
+              <div className="com-overlay">
+                <div className="com-overlay-top">
+                  {c.parceiro_plus && <span className="badge-plus">PARCEIRO PLUS</span>}
+                </div>
+                <p className="com-nome">{c.nome}</p>
+                <p className="com-sub">{catLabel[c.categoria]} · {c.horario.seg_sex}</p>
+              </div>
+            </div>
+            <div className="com-body">
+              <div className="com-info-row">
+                <span className="badge-open">ABERTO</span>
+                <span className="com-av">⭐ {c.avaliacao}</span>
+                <span className="com-end">{c.endereco.split('–')[0].trim()}</span>
+              </div>
+              <button className="btn-wpp" onClick={e => { e.stopPropagation(); window.open(`https://wa.me/${c.whatsapp}`, '_blank') }}>
+                💬 Pedir via WhatsApp
+              </button>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
